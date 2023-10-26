@@ -2,7 +2,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import { useEffect } from 'react';
 
 type Room = {
   id: string;
@@ -32,6 +32,25 @@ export default function Home() {
         firstPageParam <= 1 ? undefined : firstPageParam - 1,
     });
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const isBottom =
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.scrollHeight - 1;
+      if (isBottom && hasNextPage && !isFetching) {
+        console.log('isBottom', isBottom);
+        if (isBottom && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage, isFetching]);
+
   if (isFetching && !isFetchingNextPage) return 'Loading...';
   if (error) return 'An error has occurred: ' + error.message;
   if (!data || !data.pages[0]) return 'No data matching your search!';
@@ -58,15 +77,12 @@ export default function Home() {
         ))
       )}
       <div>
-        <button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}>
-          {isFetchingNextPage
-            ? 'Loading more...'
-            : hasNextPage
-            ? 'Load More'
-            : 'Nothing more to load'}
-        </button>
+        {isFetchingNextPage
+          ? 'Loading more...'
+          : hasNextPage
+          ? 'Load More'
+          : 'Nothing more to load'}
       </div>
-      <div>{isFetching && !isFetchingNextPage ? 'Fetching...' : null}</div>
     </div>
   );
 }
