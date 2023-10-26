@@ -17,7 +17,7 @@ const baseUrl = 'https://6538c990a543859d1bb1ea90.mockapi.io/api/rooms';
 
 export default function Home() {
   const fetchRooms = async ({ pageParam }: any) => {
-    const res = await fetch(`${baseUrl}?page=${pageParam}&limit=25`);
+    const res = await fetch(`${baseUrl}?page=${pageParam}&limit=10`);
     return await res.json();
   };
 
@@ -26,10 +26,13 @@ export default function Home() {
       queryKey: ['rooms'],
       queryFn: fetchRooms,
       initialPageParam: 1,
-      getNextPageParam: lastPage => lastPage.nextCursor,
+      getNextPageParam: (lastPage, allPages, lastPageParam) =>
+        lastPage.length === 0 ? undefined : lastPageParam + 1,
+      getPreviousPageParam: (firstPage, allPages, firstPageParam) =>
+        firstPageParam <= 1 ? undefined : firstPageParam - 1,
     });
 
-  if (isFetching) return 'Loading...';
+  if (isFetching && !isFetchingNextPage) return 'Loading...';
   if (error) return 'An error has occurred: ' + error.message;
   if (!data || !data.pages[0]) return 'No data matching your search!';
   return (
