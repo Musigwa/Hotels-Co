@@ -5,7 +5,6 @@ import { useParams, useRouter, usePathname, useSearchParams } from 'next/navigat
 export default function Details() {
   const searchParams = useSearchParams();
   const current = new URLSearchParams(Array.from(searchParams.entries()));
-  console.log('current', current);
   return (
     <main className='py-6 px-4 sm:p-6 md:py-10 md:px-8'>
       <div className='max-w-4xl mx-auto grid grid-cols-1 lg:max-w-5xl lg:gap-x-20 lg:grid-cols-2'>
@@ -24,7 +23,6 @@ export default function Details() {
             className='w-full h-60 object-cover rounded-lg sm:h-52 sm:col-span-2 lg:col-span-full'
             width={0}
             height={0}
-            priority
             layout='responsive'
           />
           <Image
@@ -33,7 +31,6 @@ export default function Details() {
             className='hidden w-full h-52 object-cover rounded-lg sm:block sm:col-span-2 md:col-span-1 lg:row-start-2 lg:col-span-2 lg:h-32'
             width={0}
             height={0}
-            priority
             layout='responsive'
           />
           <Image
@@ -42,7 +39,6 @@ export default function Details() {
             className='hidden w-full h-52 object-cover rounded-lg md:block lg:row-start-2 lg:col-span-2 lg:h-32'
             width={0}
             height={0}
-            priority
             layout='responsive'
           />
         </div>

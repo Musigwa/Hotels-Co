@@ -7,7 +7,7 @@ const nextConfig = {
       remotePatterns: [
         {
           protocol: 'https',
-          hostname: 'loremflickr.com',
+          hostname: 'cloudflare-ipfs.com',
         },
       ],
     },

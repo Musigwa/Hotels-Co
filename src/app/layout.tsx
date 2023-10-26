@@ -22,7 +22,6 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         <body className={inter.className}>
           <main className='flex min-h-screen flex-col items-center justify-between p-24 px-10'>
             <Header />
-            {/* <Head /> */}
             {children}
             <Footer />
           </main>
