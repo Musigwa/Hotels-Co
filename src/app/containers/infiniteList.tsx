@@ -2,7 +2,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { FC, PropsWithChildren, ReactNode, useEffect, useState } from 'react';
 
 type Room = {
   id: string;
@@ -13,15 +13,22 @@ type Room = {
   imageAlt: string;
 };
 
-const baseUrl = 'https://6538c990a543859d1bb1ea90.mockapi.io/api/rooms';
+type Props = {
+  limit?: number;
+  endpoint?: string;
+  setData: (data: any) => void;
+};
 
-export default function Home() {
+const baseUrl = 'https://6538c990a543859d1bb1ea90.mockapi.io/api';
+
+const InfiniteList: FC<PropsWithChildren<Props>> = ({ endpoint, limit, children, setData }) => {
+  const [fetchedData, setFetchedData] = useState([{}]);
   const fetchRooms = async ({ pageParam }: any) => {
-    const res = await fetch(`${baseUrl}?page=${pageParam}&limit=10`);
-    return res.json();
+    const res = await fetch(`${baseUrl}/${endpoint}?page=${pageParam}&limit=${limit}`);
+    return await res.json();
   };
 
-  const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } =
+  const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status } =
     useInfiniteQuery({
       queryKey: ['rooms'],
       queryFn: fetchRooms,
@@ -31,6 +38,12 @@ export default function Home() {
       getPreviousPageParam: (firstPage, allPages, firstPageParam) =>
         firstPageParam <= 1 ? undefined : firstPageParam - 1,
     });
+
+  useEffect(() => {
+    if (data) {
+      setFetchedData(prevData => [...prevData, ...data.pages]);
+    }
+  }, [data]);
 
   useEffect(() => {
     window.onscroll = () => {
@@ -49,28 +62,7 @@ export default function Home() {
   if (!data || !data.pages[0]) return 'No data matching your search!';
   return (
     <>
-      <div className='mb-20 grid text-center lg:max-w-7xl lg:w-full lg:mb-0 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 lg:text-left gap-10'>
-        {data?.pages.map((page: Room[], idx: number) =>
-          page.map((room: Room, id: number) => (
-            <Link href={{ pathname: `/rooms`, query: room }} key={id} className='group'>
-              <div className='aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 dark:bg-white-800/30 xl:aspect-h-8 xl:aspect-w-7'>
-                <Image
-                  src={room.thumbnail}
-                  alt={room.imageAlt}
-                  width={0}
-                  height={0}
-                  className='h-full w-full object-cover object-center group-hover:opacity-75'
-                  layout='responsive'
-                />
-              </div>
-              <h3 className='mt-4 text-sm text-gray-700 dark:text-gray-300'>{room.name}</h3>
-              <p className='mt-1 text-lg font-medium text-gray-900 dark:text-gray-400'>
-                ${room.price}
-              </p>
-            </Link>
-          ))
-        )}
-      </div>
+      {children}
       <div className='w-full text-center m-10'>
         {isFetchingNextPage
           ? 'Loading more...'
@@ -80,4 +72,6 @@ export default function Home() {
       </div>
     </>
   );
-}
+};
+
+export default InfiniteList;

@@ -1,23 +1,21 @@
-'use client';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import type { Metadata } from 'next';
+import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import ReactQueryProvider from './containers/ReactQueryProvider';
 import Footer from './components/footer';
 import Header from './components/header';
 import './style/globals.css';
+import { FC, PropsWithChildren } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
-const queryClient = new QueryClient();
+export const metadata: Metadata = {
+  title: 'Hotels&Co',
+  description: 'Created by Musigwa Pacifique',
+};
 
-// export const metadata: Metadata = {
-//   title: 'Hotels&Co',
-//   description: 'Created by Musigwa Pacifique',
-// };
-
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+const RootLayout: FC<PropsWithChildren<unknown>> = ({ children }) => {
   return (
-    <QueryClientProvider client={queryClient}>
+    <ReactQueryProvider>
       <html lang='en'>
         <body className={inter.className}>
           <main className='flex min-h-screen flex-col items-center justify-between p-24 px-10'>
@@ -27,7 +25,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           </main>
         </body>
       </html>
-    </QueryClientProvider>
+    </ReactQueryProvider>
   );
 };
 
