@@ -10,13 +10,13 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Hotels&Co',
-  description: 'Created by Musigwa Pacifique',
+  description: "Find and book your tonight's hostel with ease and unmatched Comfort.",
 };
 
 const RootLayout: FC<PropsWithChildren<unknown>> = ({ children }) => {
   return (
     <ReactQueryProvider>
-      <html lang='en'>
+      <html lang='en' data-theme='forest'>
         <body className={inter.className}>
           <main className='flex min-h-screen flex-col items-center justify-between p-24 px-10'>
             <Header />

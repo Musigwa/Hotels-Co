@@ -1,5 +1,3 @@
-import React from 'react';
-
 function Footer() {
   return (
     <footer className='z-10 fixed left-0 bottom-0 flex w-full justify-center bg-gradient-to-b from-zinc-200 p-8 backdrop-blur-2xl dark:from-inherit'>
